@@ -540,14 +540,51 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>git 命令简单介绍<br>
-        
-          <a class="article-more-a" href="/2017/07/25/git速记/#more">more >></a>
-        
+        <h2 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h2><h4 id="将工作区目录修改提交到暂存区"><a href="#将工作区目录修改提交到暂存区" class="headerlink" title="将工作区目录修改提交到暂存区."></a>将工作区目录修改提交到暂存区.</h4><p>git add . </p>
+<h4 id="将暂存区内容提交到本地仓储"><a href="#将暂存区内容提交到本地仓储" class="headerlink" title="将暂存区内容提交到本地仓储."></a>将暂存区内容提交到本地仓储.</h4><p>git commit -m “”<br>本操作完成后暂存区会被清空，而改动都提交到了本地仓储</p>
+<h4 id="拉取远程仓储修改并合并到本地的工作区和本地仓储"><a href="#拉取远程仓储修改并合并到本地的工作区和本地仓储" class="headerlink" title="拉取远程仓储修改并合并到本地的工作区和本地仓储."></a>拉取远程仓储修改并合并到本地的工作区和本地仓储.</h4><p>git pull</p>
+<h4 id="推送本地仓储到远程"><a href="#推送本地仓储到远程" class="headerlink" title="推送本地仓储到远程"></a>推送本地仓储到远程</h4><p>git push</p>
+<h2 id="回退篇"><a href="#回退篇" class="headerlink" title="回退篇"></a>回退篇</h2><h4 id="整体回退到上一版本，工作区目录也变化了。"><a href="#整体回退到上一版本，工作区目录也变化了。" class="headerlink" title="整体回退到上一版本，工作区目录也变化了。"></a>整体回退到上一版本，工作区目录也变化了。</h4><p>git reset –hard HEAD^</p>
+<h4 id="回到任何一个版本"><a href="#回到任何一个版本" class="headerlink" title="回到任何一个版本"></a>回到任何一个版本</h4><p>git reset –hard [commitid]</p>
+<h6 id="小贴士：如果回退到上一个版本-用传统的git-log看不到版本号，只能使用看命令历史的git-reflog来查看，这个指令类似linux的history，查看命令的输入历史"><a href="#小贴士：如果回退到上一个版本-用传统的git-log看不到版本号，只能使用看命令历史的git-reflog来查看，这个指令类似linux的history，查看命令的输入历史" class="headerlink" title="小贴士：如果回退到上一个版本,用传统的git log看不到版本号，只能使用看命令历史的git reflog来查看，这个指令类似linux的history，查看命令的输入历史"></a>小贴士：如果回退到上一个版本,用传统的git log看不到版本号，只能使用看命令历史的git reflog来查看，这个指令类似linux的history，查看命令的输入历史</h6><p>git reset HEAD aaa.txt<br>可以撤销本文件在暂存区的内容，放回工作区“取消add”</p>
+<h2 id="关于checkout"><a href="#关于checkout" class="headerlink" title="关于checkout"></a>关于checkout</h2><p>git checkout – aaa.txt  某个文件放弃工作区修改.</p>
+<h6 id="修改了代码，没有执行add，用git-status显示是红色。add后，显示为绿色，commit之后，消失"><a href="#修改了代码，没有执行add，用git-status显示是红色。add后，显示为绿色，commit之后，消失" class="headerlink" title="修改了代码，没有执行add，用git status显示是红色。add后，显示为绿色，commit之后，消失"></a>修改了代码，没有执行add，用git status显示是红色。add后，显示为绿色，commit之后，消失</h6><h4 id="可能性1："><a href="#可能性1：" class="headerlink" title="可能性1："></a>可能性1：</h4><p>aaa.txt没有执行add时。  (status是红色)<br>回复到和本地版本库一摸一样状态，代码和库一致，没有暂存区内容（因为放弃了工作区，暂存区又没内容，所以此时本地版本库此文件一定是和工作区一致的）.</p>
+<h4 id="可能性2："><a href="#可能性2：" class="headerlink" title="可能性2："></a>可能性2：</h4><p>aaa.txt 已经执行过add.  （status会显示为绿色）  </p>
+<p>情况：打算撤销文件在暂存区和工作区没提交的内容，直接回到和本地版本库一致，怎么做？<br>git reset HEAD aaa.txt 相当于取消add的操作，就是恢复到可能性1的状态，(status由绿变红)<br>然后执行git checkout – aaa.txt  此时效果一样</p>
+<h2 id="删除篇"><a href="#删除篇" class="headerlink" title="删除篇"></a>删除篇</h2><p>从文件系统首先删除了某文件。然后后续操作有2种：</p>
+<h4 id="可能操作1-确定删除："><a href="#可能操作1-确定删除：" class="headerlink" title="可能操作1,确定删除："></a>可能操作1,确定删除：</h4><p>从版本库移除<br>git rm aaa.txt  </p>
+<p>提交删除的操作<br>git commit -m “删了文件”  </p>
+<h4 id="可能操作2，后悔，想找回来："><a href="#可能操作2，后悔，想找回来：" class="headerlink" title="可能操作2，后悔，想找回来："></a>可能操作2，后悔，想找回来：</h4><p>从本地版本库找回<br>git checkout – aaa.txt</p>
+<h2 id="标签："><a href="#标签：" class="headerlink" title="标签："></a>标签：</h2><p> 发布正式版本时，需要对代码打标签便于将来查询。  </p>
+<h4 id="打标签"><a href="#打标签" class="headerlink" title="打标签"></a>打标签</h4><p>git tag v1.0 </p>
+<h6 id="如果忘记在以前的一个提交上打标签使用-git-tag-v1-0-提交的commitid"><a href="#如果忘记在以前的一个提交上打标签使用-git-tag-v1-0-提交的commitid" class="headerlink" title="如果忘记在以前的一个提交上打标签使用 git tag v1.0 提交的commitid"></a>如果忘记在以前的一个提交上打标签使用 git tag v1.0 提交的commitid</h6><h4 id="查看标签列表"><a href="#查看标签列表" class="headerlink" title="查看标签列表"></a>查看标签列表</h4><p>git tag</p>
+<h4 id="查看标签对应的commit"><a href="#查看标签对应的commit" class="headerlink" title="查看标签对应的commit"></a>查看标签对应的commit</h4><p>git show v1.0</p>
+<h4 id="对标签加说明文字"><a href="#对标签加说明文字" class="headerlink" title="对标签加说明文字"></a>对标签加说明文字</h4><p>git tag -a v0.1 -m “version 0.1 released” 3628164</p>
+<h4 id="删除标签"><a href="#删除标签" class="headerlink" title="删除标签"></a>删除标签</h4><p>git tag -d v1.0</p>
+<h4 id="推送标签"><a href="#推送标签" class="headerlink" title="推送标签"></a>推送标签</h4><p>git push origin <tagname></tagname></p>
+<h4 id="推送所有标签"><a href="#推送所有标签" class="headerlink" title="推送所有标签"></a>推送所有标签</h4><p>git push origin –tags</p>
+<h4 id="如果要删除远程标签1-0"><a href="#如果要删除远程标签1-0" class="headerlink" title="如果要删除远程标签1.0"></a>如果要删除远程标签1.0</h4><p>git tag -d v1.0 先本地删除<br>git push origin :regs/tags/v1.0  再推送删除结果</p>
+<h2 id="远程仓库："><a href="#远程仓库：" class="headerlink" title="远程仓库："></a>远程仓库：</h2><h4 id="本地目录关联远程"><a href="#本地目录关联远程" class="headerlink" title="本地目录关联远程"></a>本地目录关联远程</h4><p>git remote add origin <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:michaelliao/xxx.git</p>
+<h4 id="推送到远程"><a href="#推送到远程" class="headerlink" title="推送到远程"></a>推送到远程</h4><p>git push -u origin master<br>注意其中的-u首次需要使用不仅推送到远程，而且自动关联远程和本地master</p>
+<h2 id="分支管理："><a href="#分支管理：" class="headerlink" title="分支管理："></a>分支管理：</h2><h4 id="创建并切换"><a href="#创建并切换" class="headerlink" title="创建并切换"></a>创建并切换</h4><p>git checkout -b dev<br>等效于以下2条  </p>
+<ul>
+<li>git branch dev  </li>
+<li>git checkout dev</li>
+</ul>
+<h4 id="查看当前分支"><a href="#查看当前分支" class="headerlink" title="查看当前分支"></a>查看当前分支</h4><p>git branch</p>
+<h4 id="合并分支"><a href="#合并分支" class="headerlink" title="合并分支"></a>合并分支</h4><p>git merge dev<br>代表已当前分支为基准，将dev分支的内容合并过来</p>
+<h4 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h4><p>git branch -d dev</p>
+<h4 id="分支冲突解决"><a href="#分支冲突解决" class="headerlink" title="分支冲突解决"></a>分支冲突解决</h4><p>如果在某个时间，从master创建了分支dev，然后master和dev分别都有了新的修改，此时再在master上合并dev，将不再是直接将master指向dev这种fast的这种快速合并方式。需要手工解决冲突，然后再add和commit，此时总修改线路图相当于往前推进一格，又合为一个，所处分支就是当前位于的这个分支。是总分总的样子。使用git log –graph 可以查看总修改线路图</p>
+<h4 id="git-stash的作用"><a href="#git-stash的作用" class="headerlink" title="git stash的作用"></a>git stash的作用</h4><p>在当前分支修改内容后，如果不add和commit，将不允许切换分支，那么如果我改了一半，有一个紧急的bug需要修改，我想切换到一个新的改bug分支，只有先执行git stash暂存内容，才能切走。</p>
+<h6 id="查看stash列表"><a href="#查看stash列表" class="headerlink" title="查看stash列表"></a>查看stash列表</h6><p>git stash list</p>
+<h6 id="恢复工作内容并删除此stash记录"><a href="#恢复工作内容并删除此stash记录" class="headerlink" title="恢复工作内容并删除此stash记录"></a>恢复工作内容并删除此stash记录</h6><p>git stash pop</p>
+<h4 id="新分支的删除"><a href="#新分支的删除" class="headerlink" title="新分支的删除"></a>新分支的删除</h4><p>在创建新分支并修改代码后，需要删除，而此分支从来就没被合并过，必须强制才能删除掉<br>git branch -D dev1</p>
+<h4 id="本地和远程分支对应"><a href="#本地和远程分支对应" class="headerlink" title="本地和远程分支对应"></a>本地和远程分支对应</h4><p>如果别人也创建了远程分支branch-name，你在合并时发现已经有了。这是需要把你本地的分支指向远程，然后才能pull<br>git branch –set-upstream-to <branch-name> origin/<branch-name></branch-name></branch-name></p>
+
       
 
       
-    </p></div>
+    </div>
     <div class="article-info article-info-index">
       
       
@@ -1094,6 +1131,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">java 集合类 jdk1.8</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
               </li>
              
@@ -1110,15 +1151,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">java 集合类 jdk1.8</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">nio aio</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">mysql规约</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1126,7 +1159,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">mysql规约</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">mysql index 索引</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">spring java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">微服务架构 microservice</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1138,19 +1183,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">微服务架构 microservice</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">spring java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">数据结构 二叉树</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">trie 字典树</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构 树 B-tree B+ B*</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1158,7 +1195,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构 树 B-tree B+ B*</a>
+                <a href="javascript:void(0)" class="js-tag color4">trie 字典树</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1167,6 +1204,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">栈，队列</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CopyOnWriteArrayList</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">CopyOnWriteArraySet</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1182,23 +1227,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">CopyOnWriteArrayList</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">CopyOnWriteArraySet</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">java hashmap</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">vsftp centos linux</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">网络编程 io模型</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">java hashmap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1222,10 +1259,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ConcurrentHashMap</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ArrayBlockingQueue</a>
               </li>
              
@@ -1238,11 +1271,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
+                <a href="javascript:void(0)" class="js-tag color3">ConcurrentHashMap</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">java并发</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">多线程</a>
               </li>
             
             <div class="clearfix"></div>
