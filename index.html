@@ -160,6 +160,125 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-MAVEN基础" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<p>title: MAVEN基础<br>date: 2018-11-01 15:55:39<br>tags: 工程化 MAVEN</p>
+<h2 id="categories-工程化"><a href="#categories-工程化" class="headerlink" title="categories: 工程化"></a>categories: 工程化</h2><h2 id="摘要："><a href="#摘要：" class="headerlink" title="摘要："></a>摘要：</h2><p>maven[ˈmevən]是一款很强大的工程项目管理打包工具。基于约定优于配置的做法。本篇介绍它的安装和使用。</p>
+<h2 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h2><ol>
+<li>去官网下载gz文件</li>
+<li>解压到预期安装目录。</li>
+<li>MAVEN_HOME配置如果是windows需要配置path，如果是linux可以配置/etc/profile文件加入path</li>
+<li>配置MAVEN_OPTS</li>
+<li>在用户目录下查找.m2/settings.xml文件此为最高优先级，如果找不到会使用conf/settings.xml</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/11/01/MAVEN基础/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-CAP理论" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<p>title: CAP理论-比较eureka和zookeeper<br>date: 2018-05-16 21:12:19<br>tags: 分布式CAP</p>
+<h2 id="categories-分布式-CAP"><a href="#categories-分布式-CAP" class="headerlink" title="categories: 分布式 CAP"></a>categories: 分布式 CAP</h2><h2 id="摘要："><a href="#摘要：" class="headerlink" title="摘要："></a>摘要：</h2><p>CAP：<br>CAP即consistency一致性 avaliability可用性 partition tolerence 分区容错性。一个分布式系统不可能同时满足这三项，最多取其二。以下开始分析:</p>
+<h2 id="zookeeper"><a href="#zookeeper" class="headerlink" title="zookeeper"></a>zookeeper</h2><p>   zookeeper设计的初衷是保证数据一致性，采用一主多从，用于保证一致的状态，或者配置数据一致，就是说他保证的是CP，在保证任何时候数据是一致的，如果发生故障，会选取新的leader，在选举过程中，整个集群暂停对外服务。所以说损失了A这一项。Zookeeper采用ZAB算法，解决了多个服务的同步问题。实际上对于服务发现来说，不能容忍不返回数据，即使能返回几分钟前的结果也是可以的，所以，zookeeper不太适合做服务发现。<br>   leader：负责发起投票更新状态，特别的，所有的写请求都会被转发到他，然后由他发起投票，超过半数才是成功（不包括observer节点）<br>   follower：接受客户端请求，参与投票，并返回给客户端结果<br>   observer：也能接受客户端请求，永远不参与投票，只会和leader通讯接受投票结果和同步数据；此外对于写请求，zk会在一半以上的节点写成功了返回给客户端成功，但是这个一半不包括observer节点，所以能增加写的速度。<br>   zookeeper其他特性： </p>
+<ul>
+<li>顺序一致性，能保证请求按照顺序（时间因素）一个一个应用到zookeeper。  </li>
+<li>原子性：CAP的C，所有的事务请求的处理结果在整个集群中的所有机器的应用情况是一致的。要么整个集群中的所有机器都成功，要么都不成功。</li>
+<li>可靠性：一旦服务器成功应用了某个事务数据，并且对客户端进行了响应，那么这个数据必定是在集群中同步的，而且被保留了。</li>
+<li>实时性：一旦一个事务被成功应用，客户端就能立即从服务端读取到事务变更后的最新状态。zookeeper是近实时的。<h2 id="eureka"><a href="#eureka" class="headerlink" title="eureka"></a>eureka</h2>eureka恰恰和ZK不一样，他就是专为服务发现而设计，关注的AP，容忍不一致性，发生了服务器宕机，会进入保护模式，客户端访问会切换到正常的节点，死亡的节点仍然保留以保证客户端能请求得到，同时新来的客户端依然可以注册到正常节点。坏节点恢复后，会重新加入集群，然后同步数据。</li>
+</ul>
+<p>BASE理论：  </p>
+<p>  CAP不适用数据库事务，错误的数据更新会导致紊乱，而XA事务虽然可以保证数据库在分布式系统下的ACID特性，但是会有性能影响。ebay放宽事务要求，提出了BASE理论。</p>
+<p>  Basically Avaliable：数据库采用分片模式，拆分用户数据到多个实例，保证部分用户仍然可用。  </p>
+<p>  Soft-state：在基于cs模式的系统中，server端是否有状态决定了系统是否具备良好的水平扩展，负载均衡，故障恢复等特性。server端承诺维护client状态的数据一小段时间，然后到时之后会丢弃状态，恢复正常状态。 </p>
+<p>  Eventually consistent：最终一致性。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/10/29/CAP理论/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-区块链-共识算法" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
   <div class="article-inner">
     
@@ -198,6 +317,93 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2018/05/27/区块链-共识算法/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JAVA虚拟机常用分析工具" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/05/16/JAVA虚拟机常用分析工具/">JAVA虚拟机的工具</a>
+    </h1>
+  
+
+        
+        <a href="/2018/05/16/JAVA虚拟机常用分析工具/" class="archive-article-date">
+  	<time datetime="2018-05-16T13:12:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-05-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>内存分析工具简介<br>
+        
+          <a class="article-more-a" href="/2018/05/16/JAVA虚拟机常用分析工具/#more">more >></a>
+        
+      
+
+      
+    </p></div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">java</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/java基础//" class="article-tag-list-link color2">java基础</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/05/16/JAVA虚拟机常用分析工具/">展开全文 >></a>
         </p>
       
 
@@ -779,273 +985,6 @@
 
 
   
-    <article id="post-mysql使用emoji表情" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/21/mysql使用emoji表情/">mysql使用emoji表情</a>
-    </h1>
-  
-
-        
-        <a href="/2017/03/21/mysql使用emoji表情/" class="archive-article-date">
-  	<time datetime="2017-03-21T07:23:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-21</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="摘要："><a href="#摘要：" class="headerlink" title="摘要："></a>摘要：</h2><p>为了使用emoji表情，我们需要扩展原先的utf8为utf8mb4，向下兼容，建议使用5.7以及以上版本。<br>
-        
-          <a class="article-more-a" href="/2017/03/21/mysql使用emoji表情/#more">more >></a>
-        
-      
-
-      
-    </p></div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">我的坑</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/我的坑//" class="article-tag-list-link color4">我的坑</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/03/21/mysql使用emoji表情/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JAVA类加载过程" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/19/JAVA类加载过程/">JAVA运行环境的类加载过程</a>
-    </h1>
-  
-
-        
-        <a href="/2017/03/19/JAVA类加载过程/" class="archive-article-date">
-  	<time datetime="2017-03-19T07:23:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="摘要："><a href="#摘要：" class="headerlink" title="摘要："></a>摘要：</h2><p>本文描述java在运行环境的类加载过程。java从加载到使用会经历以下过程：<br>加载-》链接（验证-&gt;准备-&gt;解析）-》初始化-》使用-》卸载。    那么什么时候开始进入这一过程，有且仅有以下四点：</p>
-<ol>
-<li>遇到new getstatic putstatic invokestatic这4条字节码时，如果类还没有完成初始化，就是进入下面的流程，具体而言就是（new了一个对象；读取或设置一个静态字段，当然final不算，那在编译的时候就已放入常量池；调用了静态方法）</li>
-<li>使用反射调用类，如果没初始化过。</li>
-<li>初始化一个类，发现父类没有被初始化，就会触发父类的初始化（而接口相反，只有切实要用到父接口，比如引用父接口的常量时，才会触发父接口初始化）</li>
-<li>虚拟机启动的时候如果是从main启动的，那么main在的那个类初始化</li>
-<li>使用jdk1.7的动态语言支持如果MethodHandle实例最后的解析结果REF_getstatic,REF_putstatic,REF-invokeStatic<br>并且这个方法句柄所对应的类没有进行过初始化。
-        
-          <a class="article-more-a" href="/2017/03/19/JAVA类加载过程/#more">more >></a>
-        
-      
-
-      
-    </li></ol></div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JAVA基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/JAVA基础//" class="article-tag-list-link color2">JAVA基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/03/19/JAVA类加载过程/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JAVA代理" class="article article-type-post  article-index" itemscope="" itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/03/18/JAVA代理/">JAVA代理</a>
-    </h1>
-  
-
-        
-        <a href="/2017/03/18/JAVA代理/" class="archive-article-date">
-  	<time datetime="2017-03-18T02:48:36.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-03-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="摘要："><a href="#摘要：" class="headerlink" title="摘要："></a>摘要：</h2><p>代理在一些JAVA开源框架中广泛应用，那么本文介绍java的静态代理和动态代理以及内在实现原理<br>
-        
-          <a class="article-more-a" href="/2017/03/18/JAVA代理/#more">more >></a>
-        
-      
-
-      
-    </p></div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JAVA基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/JAVA基础//" class="article-tag-list-link color2">JAVA基础</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/03/18/JAVA代理/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1139,6 +1078,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">JVM</a>
               </li>
              
@@ -1148,10 +1091,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Oracle</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">java 集合类 jdk1.8</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1171,11 +1110,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">nio aio</a>
+                <a href="javascript:void(0)" class="js-tag color1">java 集合类 jdk1.8</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">我的坑</a>
+                <a href="javascript:void(0)" class="js-tag color3">nio aio</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1183,15 +1122,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">我的坑</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">mysql index 索引</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">spring java</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">微服务架构 microservice</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1203,11 +1138,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">微服务架构 microservice</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">spring java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">数据结构 二叉树</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">数据结构 树 B-tree B+ B*</a>
+                <a href="javascript:void(0)" class="js-tag color4">trie 字典树</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1215,7 +1158,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">trie 字典树</a>
+                <a href="javascript:void(0)" class="js-tag color5">数据结构 树 B-tree B+ B*</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1224,14 +1167,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">栈，队列</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">CopyOnWriteArrayList</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">CopyOnWriteArraySet</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1247,15 +1182,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">CopyOnWriteArrayList</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">CopyOnWriteArraySet</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">java hashmap</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">vsftp centos linux</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">网络编程 io模型</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">java hashmap</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1279,6 +1222,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">ConcurrentHashMap</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">ArrayBlockingQueue</a>
               </li>
              
@@ -1288,10 +1235,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">SynchronousQueue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">ConcurrentHashMap</a>
               </li>
              
               <li class="article-tag-list-item">
